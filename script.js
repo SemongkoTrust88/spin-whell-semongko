@@ -1,213 +1,233 @@
-function removeWelcome(){
- 				var e = document.getElementById('welcome');
- 				e.parentNode.parentNode.removeChild(e.parentNode);
- 				var audio = document.getElementById("casinoAudio");
- 				audio.volume = 0.7;
- 				audio.play();
- 			}
+/* =========================================================
+   BIGSLOTO Lucky Wheel - editable configuration
+   ========================================================= */
+const CONFIG = {
+  // Keep empty when the API is served from the same domain.
+  // Example for an external backend: "https://api.example.com"
+  API_BASE: "",
+  API_PATH: "/wheel/start/",
 
- 			function hideMessage(e){
- 				if(e=="alert") document.getElementById('alert').className = "hidden";
- 				else document.getElementById('congrats').className = "hidden";
-                 document.getElementById("code-mob").value = "";
-                 document.getElementById("code-desk").value = "";
-                 document.getElementById("confetti1").className = "confetti hidden";
-                 document.getElementById("confetti2").className = "confetti hidden";
- 				resetWheel();
- 			}
+  social: {
+    instagram: "https://www.instagram.com/bigsloto/",
+    facebook: "https://facebook.com/bigsloto",
+    twitter: "https://twitter.com/bigsloto"
+  }
+};
 
- 			let wincode = "";
- 			let phone = "";
- 			let whatsapp = "";
-             let theWheel = new Winwheel({
-                 'numSegments'   : 12,
-                 'outerRadius'   : 185,
-                 'innerRadius'   : 75,
-                 'textFontSize'  : 18,
-                 'textMargin'    : 0,
-                 'segments'      :
-                 [
-                    {'fillStyle' : '#ff0000', 'text' : 'IPHONE-17', 'textFillStyle' : '#c3da08'},
-                    {'fillStyle' : '#ff0000', 'text' : 'PS-5', 'textFillStyle' : '#c3da08'},
-                    {'fillStyle' : '#c3da08', 'text' : '10,000,000', 'textFillStyle' : '#1e9201'},
-                    {'fillStyle' : '#1e9201', 'text' : '5,000,000', 'textFillStyle' : '#c3da08'},
-                    {'fillStyle' : '#ff0000', 'text' : 'VERSYS-650', 'textFillStyle' : '#fff', 'textFontSize': '15'},
-                    {'fillStyle' : '#c3da08', 'text' : '1,000,000', 'textFillStyle' : '#1e9201'},
-                    {'fillStyle' : '#1e9201', 'text' : '500,000', 'textFillStyle' : '#c3da08'},
-                    {'fillStyle' : '#c3da08', 'text' : '100,000', 'textFillStyle' : '#1e9201'},
-                    {'fillStyle' : '#1e9201', 'text' : '50,000', 'textFillStyle' : '#c3da08'},
-                    {'fillStyle' : '#c3da08', 'text' : '20,000', 'textFillStyle' : '#1e9201'},
-                    {'fillStyle' : '#1e9201', 'text' : 'CASHBACK 10%', 'textFillStyle' : '#c3da08', 'textFontSize': '13'},
-                    {'fillStyle' : '#c3da08', 'text' : 'BONUS DP 10%', 'textFillStyle' : '#1e9201', 'textFontSize': '14'}
-                 ],
-                 'animation' :
-                 {
-                     'type'     : 'spinToStop',
-                     'duration' : 4,
-                     'spins'    : 12,
-                     'callbackFinished' : alertPrize
-                 }
-             });
+const segments = [
+  { fillStyle: '#ff0000', text: 'IPHONE-17', textFillStyle: '#c3da08' },
+  { fillStyle: '#ff0000', text: 'PS-5', textFillStyle: '#c3da08' },
+  { fillStyle: '#c3da08', text: '10,000,000', textFillStyle: '#1e9201' },
+  { fillStyle: '#1e9201', text: '5,000,000', textFillStyle: '#c3da08' },
+  { fillStyle: '#ff0000', text: 'VERSYS-650', textFillStyle: '#fff', textFontSize: 15 },
+  { fillStyle: '#c3da08', text: '1,000,000', textFillStyle: '#1e9201' },
+  { fillStyle: '#1e9201', text: '500,000', textFillStyle: '#c3da08' },
+  { fillStyle: '#c3da08', text: '100,000', textFillStyle: '#1e9201' },
+  { fillStyle: '#1e9201', text: '50,000', textFillStyle: '#c3da08' },
+  { fillStyle: '#c3da08', text: '20,000', textFillStyle: '#1e9201' },
+  { fillStyle: '#1e9201', text: 'CASHBACK 10%', textFillStyle: '#c3da08', textFontSize: 13 },
+  { fillStyle: '#c3da08', text: 'BONUS DP 10%', textFillStyle: '#1e9201', textFontSize: 14 }
+];
 
- 			let xhr = new XMLHttpRequest();
- 			xhr.onreadystatechange = ajaxStateChange;
+let wincode = '';
+let whatsapp = '';
+let wheelSpinning = false;
+let xhr = null;
 
- 			function calculatePrizeOnServer(code){
- 				const API_BASE = ""; // Set to your backend URL if GitHub Pages is used.
-                xhr.open("GET", API_BASE + "/wheel/start/" + encodeURIComponent(code) + "?_=" + new Date().getTime(), true);
- 				xhr.send();
- 			}
+const $ = (id) => document.getElementById(id);
+const codeInput = $('code');
+const spinButton = $('spin_button');
+const status = $('status');
 
- 			function ajaxStateChange(){
- 				if (xhr.readyState < 4)
- 					return;
+const theWheel = new Winwheel({
+  numSegments: segments.length,
+  outerRadius: 185,
+  innerRadius: 75,
+  textFontSize: 18,
+  textMargin: 0,
+  segments,
+  animation: {
+    type: 'spinToStop',
+    duration: 4,
+    spins: 12,
+    callbackFinished: alertPrize
+  }
+});
 
- 				if(xhr.status !== 200) {
- 					displayAlert("Terjadi Kesalahan Sistem, Halaman Akan Reload Dalam 5 Detik..");
- 					setTimeout(function(){location.reload(true)},5000);
- 					return;
- 				}
+function setStatus(message) {
+  status.textContent = message;
+}
 
- 				if (xhr.readyState === 4) {
- 					let resp = xhr.responseText;
- 					if(resp.trim().length>2){
- 						resp = atob(resp);
- 						resp = resp.split("-");
- 						let segmentNumber = resp[0];
- 						wincode = resp[1];
- 						website = resp[2];
- 						whatsapp = resp[3];
+function closeWelcome() {
+  $('welcome-wrapper').classList.add('hidden');
+}
 
- 						if (segmentNumber && parseInt(segmentNumber) > 0) {
- 							document.getElementById("spinAudio").play();
- 							setTimeout(function(){
- 								let stopAt = theWheel.getRandomForSegment(segmentNumber);
- 								theWheel.animation.stopAngle = stopAt;
- 								theWheel.startAnimation();
- 							},100);
- 						}
- 					}
- 					else if(resp.trim()=="-1")
- 						displayAlert("Maaf Kode Yang Kamu Masukkan Sudah Kadaluarsa, Harap Hubungi CS Untuk Mendapatkan Kode Baru!");
- 					else if(resp.trim()=="")
- 						displayAlert("Maaf Kode Yang Kamu Masukkan Salah, Harap Hubungi Customer Service Untuk Mendapatkan Kode Tiket!");
- 				}
- 			}
- <br>
-             let wheelPower    = 0;
-             let wheelSpinning = false;
- <br>
-             function startSpin(mode){
- 				var element = (mode==0) ? "code-mob" : "code-desk";
+function showModal(id, message) {
+  $(id + '-text').innerHTML = message;
+  $(id).classList.remove('hidden');
+}
 
- 				if(document.querySelector("#"+element).value.trim()==""){
- 					displayAlert("Masukkan Kode Tiket Terlebih Dahulu!");
- 					return;
- 				}
+function hideModal(id) {
+  $(id).classList.add('hidden');
+  codeInput.value = '';
+  resetWheel();
+}
 
- 				var code = document.querySelector("#"+element).value.trim();
+function resetWheel() {
+  theWheel.stopAnimation(false);
+  theWheel.rotationAngle = 0;
+  theWheel.draw();
+  wheelSpinning = false;
+  spinButton.disabled = false;
+}
 
-                 if (wheelSpinning == false) {
- 					theWheel.animation.spins = 3;
- <br>
-                     document.getElementById('spin_button').src       = "spin_off.png";
-                     document.getElementById('spin_button').className = "";
- <br>
- 					calculatePrizeOnServer(code);
+function calculatePrizeOnServer(code) {
+  if (!CONFIG.API_BASE && location.protocol === 'file:') {
+    showModal('alert', 'Backend belum terhubung. Upload project ke Netlify/GitHub Pages atau isi <b>CONFIG.API_BASE</b> pada <code>script.js</code>.');
+    spinButton.disabled = false;
+    wheelSpinning = false;
+    return;
+  }
 
-                     wheelSpinning = true;
-                 }
-             }
+  xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = ajaxStateChange;
+  const base = CONFIG.API_BASE.replace(/\/$/, '');
+  const url = base + CONFIG.API_PATH + encodeURIComponent(code) + '?_=' + Date.now();
+  xhr.open('GET', url, true);
+  xhr.send();
+}
 
-             function resetWheel() {
-                 theWheel.stopAnimation(false);
-                 theWheel.rotationAngle = 0;
-                 theWheel.draw();
- <br>
- 				document.getElementById('spin_button').src = "spin_on.png";
- 				document.getElementById('spin_button').className = "clickable";
- <br>
-                 wheelSpinning = false;
-             }
+function ajaxStateChange() {
+  if (!xhr || xhr.readyState !== 4) return;
 
-             function alertPrize(indicatedSegment){
- 				document.getElementById("congratsAudio").play();
- 				let text = "halo, saya mau klaim wheel of fortune dengan kode kemenangan "+wincode;
- 				text = encodeURIComponent(text);
- 				var prize = indicatedSegment.text;
- 		switch(prize){
- 			case "IPHONE-17":
- 				prize = "IPHONE 17 PRO MAX";
- 				break;
- 			case "PS-5":
- 				prize = "Playstation 5";
- 				break;
- 			case "CASHBACK 10%":
- 				prize = "CASHBACK 10%";
- 				break;
- 			case "VERSYS-650":
- 				prize = "VERSYS 650cc";
- 				break;
- 			case "BONUS DP 10%":
- 				prize = "BONUS DEPOSIT 10%";
- 				break;
- 			default:
- 				prize = prize + " CREDIT";
- 				break;
- 		}
+  if (xhr.status !== 200) {
+    setStatus('Backend tidak merespons. Periksa API_BASE dan endpoint.');
+    showModal('alert', 'Terjadi kesalahan saat menghubungi server. Silakan periksa koneksi backend.');
+    wheelSpinning = false;
+    spinButton.disabled = false;
+    return;
+  }
 
-     			var msg =
-     					"<div style='text-align:center'>"+
-     						"<img src='congrats.png' alt='congrats' style='width:40px;position:relative;top:-8px;vertical-align: middle;'/> "+
-     						"SELAMAT! ANDA MEMENANGKAN HADIAH <span style='color:gold'><b>" + prize + "</b></span>! "+
-     						"<img src='congrats.png' alt='congrats' style='width:40px;position:relative;top:-8px;vertical-align: middle;'/>"+
-     					"</div>" +
-     					"<div style='text-align:center'>"+
-     						"<div><b>CATAT</b> Kode Kemenangan Anda: <b style='color:gold;'>" + wincode + "</b></div>"+
-     						"<div>"+
-     							"<b>Klaim Melalui:</b> "+
-     							"<div class='claim'><i class='fa fa-whatsapp' style='color:gold'></i> <a href='https://api.whatsapp.com/send?phone="+whatsapp+"&text="+text+"' target='_blank' style='color:#fbe57a'>Whatsapp</a></div>"+
-     						"</div>"+
-     						"<div style='text-align:center;margin:10px 0;'>Untuk mendapatkan extra kode kupon undian silahkan share kemenanganmu,<br/> dan follow media sosial seperti Instagram, Facebook, dan Twitter</div>" +
-     						"<div style='margin:10px 0;text-align:center'>"+
-     						    "<a href='https://www\.instagram.com/bigsloto/'><i class='fa fa-instagram' style='color:gold;font-size:2.5em'></i></a>&nbsp;&nbsp;"+
-     						    "<a href='https://facebook.com/bigsloto'><i class='fa fa-facebook-square' style='color:gold;font-size:2.5em'></i></a>&nbsp;&nbsp;"+
-     						    "<a href='https://twitter.com/bigsloto'><i class='fa fa-twitter-square' style='color:gold;font-size:2.5em'></i></a>"+
-     					    "</div>" +
-     					"</div>";
+  let resp = xhr.responseText.trim();
+  if (resp.length > 2) {
+    try {
+      resp = atob(resp).split('-');
+      const segmentNumber = Number(resp[0]);
+      wincode = resp[1] || '';
+      whatsapp = resp[3] || '';
 
-     			if(indicatedSegment.text=="ZONK"){
-     				msg =
-     					"<div style='text-align:center'>"+
-     						"<b>Yaah ZONK, Anda Kurang Beruntung!</b> "+
-     					"</div>" +
-     					"<div style='text-align:center;margin-top:10px'>"+
-     						"<div>Silahkan Coba kembali, Tingkatkan Terus Deposit Anda, Semoga beruntung di lain Kesempatan Ya!</div>"+
-     					"</div>" +
-     					"<div style='align:center;margin-top:10px'>Follow media sosial seperti Instagram, Facebook, dan Twitter untuk mendapatkan Promosi terbaru!</div>" +
-     					"<div style='margin:10px 0;text-align:center'>"+
-     					    "<a href='https://www\.instagram.com/bigsloto/'><i class='fa fa-instagram' style='color:gold;font-size:2.5em'></i></a>&nbsp;&nbsp;"+
-     					    "<a href='https://facebook.com/bigsloto'><i class='fa fa-facebook-square' style='color:gold;font-size:2.5em'></i></a>&nbsp;&nbsp;"+
-     					    "<a href='https://twitter.com/bigsloto'><i class='fa fa-twitter-square' style='color:gold;font-size:2.5em'></i></a>"+
-     				    "</div>";
-     				displayCongrats(msg,0);
-     			}
-     			else
-     				displayCongrats(msg,1);
-             }
+      if (segmentNumber > 0 && segmentNumber <= segments.length) {
+        setStatus('Kode valid. Wheel sedang berputar...');
+        const stopAt = theWheel.getRandomForSegment(segmentNumber);
+        theWheel.animation.stopAngle = stopAt;
+        theWheel.startAnimation();
+      } else {
+        showModal('alert', 'Respons server tidak valid.');
+        wheelSpinning = false;
+        spinButton.disabled = false;
+      }
+    } catch (error) {
+      console.error(error);
+      showModal('alert', 'Respons server tidak dapat diproses.');
+      wheelSpinning = false;
+      spinButton.disabled = false;
+    }
+  } else if (resp === '-1') {
+    showModal('alert', 'Maaf, kode yang kamu masukkan sudah kadaluarsa.');
+    wheelSpinning = false;
+    spinButton.disabled = false;
+  } else if (resp === '') {
+    showModal('alert', 'Maaf, kode yang kamu masukkan salah.');
+    wheelSpinning = false;
+    spinButton.disabled = false;
+  }
+}
 
-             function displayCongrats(message,win){
-             	document.getElementById('congrats-text').innerHTML = message;
-             	if(win){
-             		document.getElementById("confetti1").className = "confetti";
-             		document.getElementById("confetti2").className = "confetti";
-             	}
-             	document.getElementById('alert').className = "hidden";
-             	document.getElementById('congrats').className = "";
-             }
+function startSpin() {
+  const code = codeInput.value.trim();
+  if (!code) {
+    showModal('alert', 'Masukkan Kode Tiket Terlebih Dahulu!');
+    return;
+  }
+  if (wheelSpinning) return;
 
- 			function displayAlert(message){
- 				document.getElementById('alert-text').innerHTML = message;
- 				document.getElementById('congrats').className = "hidden";
- 				document.getElementById('alert').className = "";
- 			}
+  wheelSpinning = true;
+  spinButton.disabled = true;
+  setStatus('Memeriksa kode tiket...');
+  calculatePrizeOnServer(code);
+}
+
+function prizeLabel(rawPrize) {
+  const map = {
+    'IPHONE-17': 'IPHONE 17 PRO MAX',
+    'PS-5': 'Playstation 5',
+    'CASHBACK 10%': 'CASHBACK 10%',
+    'VERSYS-650': 'VERSYS 650cc',
+    'BONUS DP 10%': 'BONUS DEPOSIT 10%'
+  };
+  return map[rawPrize] || rawPrize + ' CREDIT';
+}
+
+function makeConfetti() {
+  const layer = $('confetti-layer');
+  layer.innerHTML = '';
+  const colors = ['#ff0000', '#ffd700', '#c8dc18', '#ffffff', '#20b45a'];
+  for (let i = 0; i < 70; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[i % colors.length];
+    piece.style.setProperty('--x', (Math.random() * 240 - 120) + 'px');
+    piece.style.animationDelay = (Math.random() * .6) + 's';
+    layer.appendChild(piece);
+  }
+  setTimeout(() => { layer.innerHTML = ''; }, 3500);
+}
+
+function alertPrize(indicatedSegment) {
+  wheelSpinning = false;
+  spinButton.disabled = false;
+
+  const rawPrize = indicatedSegment.text;
+  const prize = prizeLabel(rawPrize);
+  const message = encodeURIComponent('halo, saya mau klaim wheel of fortune dengan kode kemenangan ' + wincode);
+
+  if (rawPrize === 'ZONK') {
+    showModal('congrats', '<b>Yaah ZONK, Anda Kurang Beruntung!</b><div style="margin-top:10px">Silakan coba kembali di lain kesempatan.</div>');
+    return;
+  }
+
+  const whatsappLink = whatsapp
+    ? 'https://api.whatsapp.com/send?phone=' + encodeURIComponent(whatsapp) + '&text=' + message
+    : '#';
+
+  const social = CONFIG.social;
+  const html = `
+    <div style="text-align:center">
+      <div style="font-size:28px;margin-bottom:10px">🎉</div>
+      <b>SELAMAT! ANDA MEMENANGKAN HADIAH</b>
+      <div style="color:gold;font-size:22px;margin:8px 0"><b>${escapeHtml(prize)}</b></div>
+      <div><b>Kode Kemenangan:</b> <span style="color:gold"><b>${escapeHtml(wincode)}</b></span></div>
+      ${whatsapp ? `<div class="claim"><i class="fa-brands fa-whatsapp" style="color:gold"></i> <a href="${whatsappLink}" target="_blank" rel="noopener">WhatsApp</a></div>` : ''}
+      <div style="margin:16px 0 8px">Follow media sosial untuk mendapatkan informasi terbaru.</div>
+      <div style="font-size:24px">
+        <a href="${social.instagram}" target="_blank" rel="noopener" style="color:gold;margin:0 8px"><i class="fa-brands fa-instagram"></i></a>
+        <a href="${social.facebook}" target="_blank" rel="noopener" style="color:gold;margin:0 8px"><i class="fa-brands fa-facebook"></i></a>
+        <a href="${social.twitter}" target="_blank" rel="noopener" style="color:gold;margin:0 8px"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+    </div>`;
+
+  makeConfetti();
+  showModal('congrats', html);
+  setStatus('Selesai.');
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+}
+
+$('agree').addEventListener('click', closeWelcome);
+$('close-alert').addEventListener('click', () => hideModal('alert'));
+$('close-congrats').addEventListener('click', () => hideModal('congrats'));
+spinButton.addEventListener('click', startSpin);
+codeInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') startSpin(); });

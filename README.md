@@ -1,31 +1,73 @@
-# BIGSLOTO Lucky Wheel — GitHub Editable
+# BIGSLOTO Lucky Wheel — GitHub + Netlify Ready
+
+Project sudah dipisahkan menjadi HTML, CSS, dan JavaScript agar mudah diedit langsung dari GitHub.
 
 ## Struktur
-- `index.html` — struktur halaman
-- `style.css` — semua CSS/desain
-- `script.js` — logika Lucky Wheel
-- `assets/` — gambar, audio, font, Winwheel, Font Awesome
 
-## GitHub
-Upload seluruh folder ini ke repository GitHub. Setelah itu file HTML/CSS/JS bisa diedit langsung dari GitHub.
-
-## Penting: backend
-Kode asli menggunakan endpoint server `/wheel/start/{kode}` untuk menentukan hasil spin. GitHub Pages hanya hosting file statis, jadi endpoint tersebut **tidak bisa dijalankan oleh GitHub Pages**.
-
-Di `script.js` terdapat:
-```js
-const API_BASE = "";
+```text
+.
+├── index.html
+├── style.css
+├── script.js
+├── netlify.toml
+├── .gitignore
+└── README.md
 ```
 
-Jika backend/API Anda berada di server lain, isi menjadi contoh:
+## Edit dari GitHub
+
+- `index.html` → teks/tampilan halaman.
+- `style.css` → warna, ukuran, responsive, modal, dan desain.
+- `script.js` → hadiah, endpoint API, WhatsApp, dan sosial media.
+
+## Konfigurasi utama
+
+Buka `script.js` lalu ubah bagian `CONFIG`:
+
 ```js
-const API_BASE = "https://domain-api-anda.com";
+const CONFIG = {
+  API_BASE: "",
+  API_PATH: "/wheel/start/",
+  social: {
+    instagram: "https://www.instagram.com/bigsloto/",
+    facebook: "https://facebook.com/bigsloto",
+    twitter: "https://twitter.com/bigsloto"
+  }
+};
 ```
 
-Backend harus menyediakan:
-`GET /wheel/start/{kode}`
+Jika backend berada di domain berbeda, isi `API_BASE`, misalnya:
 
-dan mengembalikan format respons yang kompatibel dengan kode asli.
+```js
+API_BASE: "https://api.domain-anda.com"
+```
 
-## Assets
-File aset asli seperti `bg.jpg`, `confetti.gif`, audio, `congrats.png`, `Winwheel.min.js`, dan font perlu ditempatkan sesuai struktur `assets/`.
+Frontend kemudian memanggil:
+
+```text
+GET https://api.domain-anda.com/wheel/start/{kode}
+```
+
+## Format respons backend
+
+Frontend ini mempertahankan format kompatibel dengan source lama: respons berupa Base64 yang setelah decode berisi:
+
+```text
+segmentNumber-wincode-website-whatsapp
+```
+
+Contoh:
+
+```text
+3-ABC123-https://domain.com-628123456789
+```
+
+## Netlify
+
+Repository dapat dihubungkan ke Netlify. Build command tidak diperlukan; publish directory adalah root repository (`.`).
+
+**Catatan:** Netlify/GitHub Pages hanya menyediakan frontend statis. Endpoint `/wheel/start/{kode}` tetap membutuhkan backend/API terpisah.
+
+## Library
+
+Winwheel dan GSAP dimuat melalui CDN pada `index.html`. Dokumentasi Winwheel menjelaskan penggunaan `Winwheel` dengan HTML5 Canvas dan animasi `spinToStop`. 
