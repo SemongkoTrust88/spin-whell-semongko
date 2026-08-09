@@ -1,0 +1,80 @@
+<html>
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     <head>
+         <title>BIGSLOTO Lucky Wheel</title>
+ 		<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+         <meta name="robots" content="noindex,nofollow"/>
+         <link rel="stylesheet" href="[font/css/font-awesome.min.css](assets/font/css/font-awesome.min.css)" type="text/css" />
+         <link rel="stylesheet" href="[main.css?v=3](assets/main.css?v=3)" type="text/css" />
+ 		<link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com/)">
+ 		<link href="[https://fonts.googleapis.com/css2?family=Roboto&display=swap](https://fonts.googleapis.com/css2?family=Roboto&display=swap)" rel="stylesheet">
+         <script type="text/javascript" src="[Winwheel.min.js](assets/Winwheel.min.js)"></script>
+         <script src="[https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js](https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js)"></script>
+
+ 		
+     </head>
+     <body>
+ 		<div style="position:absolute;top:0;left:0;width:100%;height:100%;overflow-y:hidden;">
+ 			<img src="[confetti.gif](assets/confetti.gif)" id="confetti1" class="confetti hidden">
+ 			<img src="[confetti.gif](assets/confetti.gif)" id="confetti2" class="confetti hidden">
+ 		</div>
+ 		<div id="welcome-wrapper">
+ 			<div id="welcome">
+ 				<h1>Selamat Datang di Lucky Wheel!</h1>
+ 				<p>
+ 					Kami selaku pihak BIGSLOTO terlebih dahulu mengucapkan selamat kepada setiap member yang memiliki tiket untuk berkesempatan memenangkan hadiah menarik yang ditawarkan di Lucky Wheel ini, Untuk kalian yang memiliki tiket silahkan masukkan ke kolom kode yang disediakan dan klik tombol spin untuk memulai peruntungan anda.
+ 				</p>
+ 				<div style="text-align:center">
+ 					<button id="agree" onclick="removeWelcome()">Oke, Terima Kasih!</button>
+ 				</div>
+ 			</div>
+ 		</div>
+ 		<div id="bg"></div>
+         <div id="wrapper" align="center">
+             <table cellpadding="0" cellspacing="0" border="0">
+                 <tr>
+                     <td width="438" height="582" class="the_wheel" align="center" valign="middle">
+                         <canvas id="canvas" width="434" height="434">
+                             <p style="color:white" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                         </canvas>
+                     </td>
+                     <td align="center" class="hide-on-mobile" style="padding-left:50px">
+                         <div class="power_controls">
+ 							<h2>Masukkan Kode Tiket</h2>
+ 							<div><input id="code-desk" style="padding:15px" type="text" placeholder="Masukkan Kode"/></div><br/>
+                             <button id="spin_button" onClick="startSpin(1);">SPIN</button>
+                         </div>
+                     </td>
+                 </tr>
+ 				<tr>
+ 					<td align="center" class="hide-on-desktop">
+                         <div class="power_controls">
+ 							<h2>Masukkan Kode Tiket</h2>
+ 							<div><input id="code-mob" style="padding:15px;margin-top:10px" type="text" placeholder="Masukkan Kode"/></div><br/>
+                             <button id="spin_button" onClick="startSpin(0);">SPIN</button>
+                         </div>
+ 					</div>
+ 				</tr>
+             </table>
+         </div>
+ 		<div id="alert" class="hidden">
+ 			<div id="alert-message">
+ 				<div id="close-alert" onclick="hideMessage('alert')">&times;</div>
+ 				<span id="alert-text"></span>
+ 			</div>
+ 		</div>
+ 		<div id="congrats" class="hidden">
+ 			<div id="congrats-message">
+ 				<div id="close-congrats" onclick="hideMessage('congrats');">&times;</div>
+ 				<span id="congrats-text"></span>
+ 			</div>
+ 		</div>
+ 		<div class="hidden">
+ 			<audio id="spinAudio" src="[spin.mp3](assets/spin.mp3)"></audio>
+ 			<audio id="congratsAudio" src="[congrats.mp3](assets/congrats.mp3)"></audio>
+ 			<audio id="casinoAudio" src="[casino.mp3](assets/casino.mp3)" loop></audio>
+ 		</div>
+         <script src="script.js"></script>
+     <script type="module" src="[https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496](https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496)" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"b153c95e88e64564b9d5379ba3c0a15b","r":1}' crossorigin="anonymous"></script>
+ </body>
+ </html>
