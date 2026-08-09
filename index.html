@@ -1,68 +1,37 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#070707">
-  <title>BIGSLOTO Lucky Wheel</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Winwheel 2.8.0 + GSAP 2: dependency used by the original project. -->
-  <script src="https://cdn.jsdelivr.net/gh/zarocknz/javascript-winwheel@2.8.0/Winwheel.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
-</head>
-<body>
-  <div id="confetti-layer" aria-hidden="true"></div>
-
-  <div id="welcome-wrapper">
-    <div id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-      <h1 id="welcome-title">Selamat Datang di Lucky Wheel!</h1>
-      <p>
-        Silakan masukkan kode tiket yang diberikan, kemudian tekan tombol SPIN untuk memulai.
-      </p>
-      <button id="agree" type="button">Oke, Terima Kasih!</button>
-    </div>
-  </div>
-
-  <main id="wrapper">
-    <section class="wheel-card">
-      <div class="wheel-stage">
-        <div class="pointer" aria-hidden="true"></div>
-        <canvas id="canvas" width="434" height="434">
-          Browser Anda tidak mendukung HTML5 Canvas.
-        </canvas>
-      </div>
-
-      <div class="controls">
-        <h2>Masukkan Kode Tiket</h2>
-        <div class="input-row">
-          <input id="code" type="text" inputmode="text" autocomplete="off" placeholder="Masukkan Kode" aria-label="Kode tiket">
-          <button id="spin_button" type="button">SPIN</button>
-        </div>
-        <p class="status" id="status" role="status">Siap.</p>
-      </div>
-    </section>
-  </main>
-
-  <div id="alert" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="alert-text">
-    <div class="modal-card">
-      <button class="close" id="close-alert" type="button" aria-label="Tutup">&times;</button>
-      <div id="alert-text"></div>
-    </div>
-  </div>
-
-  <div id="congrats" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="congrats-text">
-    <div class="modal-card win-card">
-      <button class="close" id="close-congrats" type="button" aria-label="Tutup">&times;</button>
-      <div id="congrats-text"></div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Panel — Lucky Wheel</title><style>
+:root{--bg:#08090b;--panel:#11151b;--panel2:#171c23;--line:#ffffff18;--text:#f5f7fa;--muted:#9ba5b1;--accent:#e20a16;--gold:#ffd700}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#06070a,#10141a);color:var(--text);font-family:Inter,Arial,sans-serif}.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{background:#090b0e;border-right:1px solid var(--line);padding:18px;position:sticky;top:0;height:100vh}.logo{font-weight:900;font-size:20px;margin-bottom:24px}.nav button{width:100%;text-align:left;background:transparent;color:#cbd2da;border:0;padding:12px;border-radius:10px;margin:3px 0;cursor:pointer}.nav button.active,.nav button:hover{background:#ffffff0d;color:#fff}.main{padding:26px;max-width:1500px;width:100%}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:28px}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer;background:#2a3038;color:#fff}.btn.primary{background:var(--accent)}.btn.gold{background:var(--gold);color:#111}.btn.danger{background:#6e1318}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}.card h2{margin:0 0 16px;font-size:18px}.field{margin:11px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field textarea,.field select{width:100%;background:#080b0f;color:#fff;border:1px solid #ffffff20;border-radius:8px;padding:10px}.field textarea{min-height:90px;resize:vertical}.check{display:flex;gap:8px;align-items:center;color:#cbd2da}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}.seg{display:grid;grid-template-columns:1.6fr 90px 90px 90px 80px 70px;gap:7px;align-items:center;margin-bottom:8px}.seg input{min-width:0}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.loginbox{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{display:none}.tab.active{display:block}.status{padding:9px 12px;border-radius:8px;background:#102316;color:#7dff9d;margin-bottom:15px}.small{font-size:12px;color:var(--muted)}.toast{position:fixed;right:20px;bottom:20px;background:#161b22;border:1px solid #ffffff22;padding:12px 16px;border-radius:10px;display:none}.toast.show{display:block}@media(max-width:900px){.app{grid-template-columns:1fr}.side{position:relative;height:auto}.grid,.grid3{grid-template-columns:1fr}.seg{grid-template-columns:1fr 80px 80px;}.seg .wide{grid-column:1/-1}}
+</style></head><body>
+<div id="login" class="login"><form class="loginbox" id="loginForm"><h1>Admin Panel</h1><p class="small">Kelola penuh website Lucky Wheel.</p><div class="field"><label>Username</label><input id="username" value="admin" required></div><div class="field"><label>Password</label><input id="password" type="password" required></div><button class="btn primary" style="width:100%">LOGIN</button><p id="loginError" style="color:#ff7272"></p></form></div>
+<div id="app" class="app" style="display:none"><aside class="side"><div class="logo">SEMONGKO <span style="color:#ffd700">ADMIN</span></div><nav class="nav"><button data-tab="dashboard">📊 Dashboard</button><button data-tab="site">⚙ Website</button><button data-tab="wheel">🎡 Wheel</button><button data-tab="tickets">🎫 Tiket</button><button data-tab="claim">📱 Klaim & Sosial</button><button data-tab="messages">💬 Pesan</button><button data-tab="logs">🧾 Log Aktivitas</button></nav><button class="btn" id="logout" style="width:100%;margin-top:20px">Logout</button></aside>
+<main class="main"><div class="top"><h1 id="pageTitle">Dashboard</h1><div><button class="btn" id="reset">Reset Default</button> <button class="btn primary" id="save">Simpan Semua</button></div></div><div id="status" class="status">Terhubung ke database Netlify Blobs.</div>
+<section id="dashboard" class="tab active"><div class="grid3"><div class="card"><div class="small">Hadiah aktif</div><h2 id="statPrizes">0</h2></div><div class="card"><div class="small">Tiket aktif</div><h2 id="statActive">0</h2></div><div class="card"><div class="small">Tiket terpakai</div><h2 id="statUsed">0</h2></div></div><div class="card" style="margin-top:16px"><h2>Akses penuh</h2><p class="small">Semua pengaturan di panel ini disimpan ke Netlify Blobs, sehingga perubahan tidak hilang ketika Netlify melakukan deploy baru. Kamu dapat mengubah tampilan, hadiah, bobot, tiket, pesan, WhatsApp, dan sosial media tanpa mengedit kode.</p></div></section>
+<section id="site" class="tab"><div class="grid"><div class="card"><h2>Identitas Website</h2><div class="field"><label>Nama / Judul utama</label><input data-bind="site.name"></div><div class="field"><label>Title browser</label><input data-bind="site.title"></div><div class="field"><label>Subtitle</label><input data-bind="site.subtitle"></div><div class="field"><label>Logo URL</label><input data-bind="site.logoUrl" placeholder="https://..."></div><div class="field"><label>Background URL</label><input data-bind="site.backgroundUrl" placeholder="https://..."></div><div class="field"><label>Footer</label><input data-bind="site.footerText"></div></div><div class="card"><h2>Warna & Welcome</h2><div class="grid3"><div class="field"><label>Primary</label><input type="color" data-bind="site.primaryColor"></div><div class="field"><label>Secondary</label><input type="color" data-bind="site.secondaryColor"></div><div class="field"><label>Accent</label><input type="color" data-bind="site.accentColor"></div></div><div class="field"><label>Judul Welcome</label><input data-bind="site.welcomeTitle"></div><div class="field"><label>Isi Welcome</label><textarea data-bind="site.welcomeText"></textarea></div><label class="check"><input type="checkbox" data-bind="site.showWelcome"> Tampilkan popup welcome</label></div></div></section>
+<section id="wheel" class="tab"><div class="card"><h2>Pengaturan Wheel</h2><div class="grid3"><div class="field"><label>Durasi (detik)</label><input type="number" step="0.5" data-bind="wheel.duration"></div><div class="field"><label>Jumlah putaran</label><input type="number" data-bind="wheel.spins"></div><div class="field"><label>Ukuran teks</label><input type="number" data-bind="wheel.textFontSize"></div></div></div><div class="card" style="margin-top:16px"><h2>Daftar Hadiah</h2><div class="small" style="margin-bottom:12px">Weight = bobot peluang. Nilai 0 atau nonaktif tidak ikut dipilih otomatis.</div><div id="segments"></div><button class="btn gold" id="addSegment">+ Tambah Hadiah</button></div></section>
+<section id="tickets" class="tab"><div class="card"><h2>Generate Tiket</h2><div class="grid3"><div class="field"><label>Jumlah</label><input type="number" id="ticketCount" value="10" min="1" max="500"></div><div class="field"><label>Panjang kode</label><input type="number" id="ticketLen" value="8" min="4" max="24"></div><div class="field"><label>Hadiah yang ditetapkan</label><select id="ticketPrize"></select></div></div><button class="btn gold" id="generateTickets">Generate</button></div><div class="card" style="margin-top:16px"><h2>Daftar Tiket</h2><div style="overflow:auto"><table class="table"><thead><tr><th>Kode</th><th>Hadiah</th><th>Status</th><th>Dibuat</th><th>Digunakan</th><th>Aksi</th></tr></thead><tbody id="ticketRows"></tbody></table></div></div></section>
+<section id="claim" class="tab"><div class="grid"><div class="card"><h2>WhatsApp</h2><div class="field"><label>Nomor WhatsApp tanpa +</label><input data-bind="claim.whatsapp"></div><div class="field"><label>Template pesan</label><textarea data-bind="claim.whatsappMessage"></textarea></div><div class="field"><label>Label tombol</label><input data-bind="claim.claimLabel"></div></div><div class="card"><h2>Sosial Media</h2><div class="field"><label>Instagram</label><input data-bind="claim.instagram"></div><div class="field"><label>Facebook</label><input data-bind="claim.facebook"></div><div class="field"><label>Twitter/X</label><input data-bind="claim.twitter"></div></div></div></section>
+<section id="messages" class="tab"><div class="grid"><div class="card"><h2>Pesan</h2><div class="field"><label>Judul kemenangan</label><input data-bind="messages.winTitle"></div><div class="field"><label>Pesan kemenangan</label><textarea data-bind="messages.winText"></textarea></div><div class="field"><label>Pesan kode salah</label><textarea data-bind="messages.invalidCode"></textarea></div><div class="field"><label>Pesan kadaluarsa</label><textarea data-bind="messages.expiredCode"></textarea></div><div class="field"><label>Pesan sistem</label><textarea data-bind="messages.systemError"></textarea></div></div></div></section>
+<section id="logs" class="tab"><div class="card"><h2>Aktivitas Admin</h2><button class="btn danger" id="clearLogs">Hapus Log</button><div style="overflow:auto;margin-top:12px"><table class="table"><thead><tr><th>Waktu</th><th>Aksi</th><th>Detail</th></tr></thead><tbody id="logRows"></tbody></table></div></div></section>
+</main></div><div id="toast" class="toast"></div>
+<script>
+let state=null;const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function getPath(obj,path){return path.split('.').reduce((o,k)=>o?.[k],obj)}function setPath(obj,path,val){const a=path.split('.');let o=obj;for(let i=0;i<a.length-1;i++)o=o[a[i]];o[a.at(-1)]=val}
+async function api(url,opt={}){const r=await fetch(url,opt);const d=await r.json().catch(()=>({error:'Response tidak valid'}));if(!r.ok)throw new Error(d.error||'Request gagal');return d}
+function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+$('#loginForm').onsubmit=async e=>{e.preventDefault();$('#loginError').textContent='';try{await api('/api/admin-auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:$('#username').value,password:$('#password').value})});showApp();}catch(err){$('#loginError').textContent=err.message}};
+async function showApp(){try{const d=await api('/api/admin-api');state=d.config;renderAll(d.logs);$('#login').style.display='none';$('#app').style.display='grid'}catch(e){$('#loginError').textContent=e.message}}
+function bindFields(){ $$('[data-bind]').forEach(el=>{const p=el.dataset.bind;const v=getPath(state,p);if(el.type==='checkbox')el.checked=!!v;else el.value=v??'';el.oninput=()=>setPath(state,p,el.type==='checkbox'?el.checked:el.type==='number'?Number(el.value):el.value)});}
+function renderAll(logs=[]){bindFields();renderSegments();renderTickets();renderLogs(logs);stats();}
+function renderSegments(){const box=$('#segments');box.innerHTML='';state.wheel.segments.forEach((s,i)=>{const row=document.createElement('div');row.className='seg';row.innerHTML=`<input value="${esc(s.label)}" placeholder="Nama hadiah"><input type="color" value="${esc(s.color)}"><input type="color" value="${esc(s.textColor)}"><input type="number" min="0" step="0.1" value="${s.weight}"><label class="check"><input type="checkbox" ${s.enabled?'checked':''}> ON</label><button class="btn danger">Hapus</button>`;const ins=row.querySelectorAll('input');ins[0].oninput=e=>s.label=e.target.value;ins[1].oninput=e=>s.color=e.target.value;ins[2].oninput=e=>s.textColor=e.target.value;ins[3].oninput=e=>s.weight=Number(e.target.value);ins[4].onchange=e=>s.enabled=e.target.checked;row.querySelector('button').onclick=()=>{state.wheel.segments.splice(i,1);renderSegments();renderTickets();stats()};box.appendChild(row)});}
+function renderTickets(){const sel=$('#ticketPrize');sel.innerHTML='<option value="">Otomatis / acak</option>'+state.wheel.segments.map(s=>`<option value="${esc(s.id)}">${esc(s.label)}</option>`).join('');$('#ticketRows').innerHTML=state.tickets.map((t,i)=>`<tr><td><b>${esc(t.code)}</b></td><td>${esc(state.wheel.segments.find(s=>s.id===t.prizeId)?.label||'Otomatis')}</td><td>${esc(t.status)}</td><td>${fmt(t.createdAt)}</td><td>${fmt(t.usedAt)}</td><td><button class="btn danger" data-del="${i}">Hapus</button></td></tr>`).join('');$$('[data-del]').forEach(b=>b.onclick=()=>{state.tickets.splice(Number(b.dataset.del),1);renderTickets();stats()});}
+function stats(){const active=state.tickets.filter(t=>t.status==='active').length;$('#statPrizes').textContent=state.wheel.segments.filter(s=>s.enabled).length;$('#statActive').textContent=active;$('#statUsed').textContent=state.tickets.filter(t=>t.status==='used').length}
+function renderLogs(logs){$('#logRows').innerHTML=(logs||[]).map(l=>`<tr><td>${fmt(l.at)}</td><td>${esc(l.action)}</td><td><code>${esc(JSON.stringify(l))}</code></td></tr>`).join('')}
+function fmt(v){return v?new Date(v).toLocaleString('id-ID'):'—'}function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+$('#addSegment').onclick=()=>{state.wheel.segments.push({id:'p-'+Date.now(),label:'HADIAH BARU',color:'#ff0000',textColor:'#ffffff',weight:1,enabled:true});renderSegments();renderTickets();stats()};
+$('#generateTickets').onclick=()=>{const n=Math.min(500,Math.max(1,Number($('#ticketCount').value)||1));const len=Math.min(24,Math.max(4,Number($('#ticketLen').value)||8));const prizeId=$('#ticketPrize').value;const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const used=new Set(state.tickets.map(t=>t.code));for(let i=0;i<n;i++){let code='';do{for(let j=0;j<len;j++)code+=chars[Math.floor(Math.random()*chars.length)]}while(used.has(code));used.add(code);state.tickets.push({id:crypto.randomUUID(),code,prizeId,status:'active',createdAt:new Date().toISOString(),usedAt:null,winner:null})}renderTickets();stats();toast(`${n} tiket dibuat`) };
+$('#save').onclick=async()=>{try{await api('/api/admin-api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'save',config:state})});toast('Semua perubahan tersimpan');const d=await api('/api/admin-api');renderLogs(d.logs)}catch(e){toast(e.message)}};
+$('#reset').onclick=async()=>{if(!confirm('Reset semua konfigurasi ke default?'))return;try{const d=await api('/api/admin-api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'reset'})});state=d.config;renderAll([]);toast('Default dipulihkan')}catch(e){toast(e.message)}};
+$('#clearLogs').onclick=async()=>{if(!confirm('Hapus semua log?'))return;await api('/api/admin-api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'clear_logs'})});$('#logRows').innerHTML='';toast('Log dihapus')};
+$('#logout').onclick=async()=>{await api('/api/admin-auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'logout'})});location.reload()};
+$$('.nav button').forEach(b=>b.onclick=()=>{$$('.tab').forEach(x=>x.classList.remove('active'));$('#'+b.dataset.tab).classList.add('active');$('#pageTitle').textContent=b.textContent.replace(/^\S+\s/,'')});
+showApp();
+</script></body></html>

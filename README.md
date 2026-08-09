@@ -1,73 +1,58 @@
-# BIGSLOTO Lucky Wheel — GitHub + Netlify Ready
+# Semongko Lucky Wheel — Full Admin Panel
 
-Project sudah dipisahkan menjadi HTML, CSS, dan JavaScript agar mudah diedit langsung dari GitHub.
+Versi ini memisahkan website publik dan Admin Panel, dengan backend Netlify Functions + Netlify Blobs. Netlify Functions dapat membaca environment variables untuk secret runtime, sedangkan Netlify Blobs menyediakan penyimpanan key/value yang tetap tersedia lintas deploy.
 
 ## Struktur
+- `/index.html` — website publik
+- `/admin/index.html` — Admin Panel
+- `/netlify/functions/admin-auth.mjs` — login/logout admin
+- `/netlify/functions/admin-api.mjs` — konfigurasi, tiket, audit log
+- `/netlify/functions/public-config.mjs` — konfigurasi publik tanpa data tiket
+- `/netlify/functions/spin.mjs` — validasi dan pemakaian kode tiket
+- `/netlify/functions/_lib.mjs` — storage, auth session, konfigurasi default
+- `/netlify.toml` — konfigurasi Netlify
 
-```text
-.
-├── index.html
-├── style.css
-├── script.js
-├── netlify.toml
-├── .gitignore
-└── README.md
-```
+## SETUP WAJIB DI NETLIFY
+Buka **Project configuration → Environment variables** lalu buat:
 
-## Edit dari GitHub
+`ADMIN_USERNAME` = username admin yang kamu inginkan
 
-- `index.html` → teks/tampilan halaman.
-- `style.css` → warna, ukuran, responsive, modal, dan desain.
-- `script.js` → hadiah, endpoint API, WhatsApp, dan sosial media.
+`ADMIN_PASSWORD` = password admin yang kuat
 
-## Konfigurasi utama
+`ADMIN_SESSION_SECRET` = string rahasia acak yang panjang
 
-Buka `script.js` lalu ubah bagian `CONFIG`:
+Jangan menaruh password atau session secret di GitHub. Netlify mendukung environment variables untuk secret yang dipakai oleh Functions.
 
-```js
-const CONFIG = {
-  API_BASE: "",
-  API_PATH: "/wheel/start/",
-  social: {
-    instagram: "https://www.instagram.com/bigsloto/",
-    facebook: "https://facebook.com/bigsloto",
-    twitter: "https://twitter.com/bigsloto"
-  }
-};
-```
+## URL
+- Website: `/`
+- Admin: `/admin/`
 
-Jika backend berada di domain berbeda, isi `API_BASE`, misalnya:
+## Fitur Admin
+- Identitas website
+- Logo/background URL
+- Warna
+- Popup welcome
+- Pengaturan durasi dan putaran wheel
+- Tambah/edit/hapus hadiah
+- Weight/bobot hadiah
+- Aktif/nonaktif hadiah
+- Generate kode tiket massal
+- Tetapkan hadiah ke tiket atau gunakan pemilihan otomatis
+- Hapus tiket
+- WhatsApp dan template klaim
+- Instagram/Facebook/Twitter
+- Semua pesan kemenangan/error
+- Audit log
+- Reset konfigurasi default
 
-```js
-API_BASE: "https://api.domain-anda.com"
-```
+## Data
+Konfigurasi dan tiket disimpan di Netlify Blobs sehingga tidak hilang ketika ada deploy baru.
 
-Frontend kemudian memanggil:
+## Catatan keamanan
+- Login menggunakan HttpOnly + Secure + SameSite cookie.
+- Endpoint admin tidak dapat diakses tanpa session admin.
+- Endpoint publik tidak mengirim daftar tiket.
+- Kode tiket divalidasi server-side dan ditandai `used` setelah berhasil diproses.
 
-```text
-GET https://api.domain-anda.com/wheel/start/{kode}
-```
-
-## Format respons backend
-
-Frontend ini mempertahankan format kompatibel dengan source lama: respons berupa Base64 yang setelah decode berisi:
-
-```text
-segmentNumber-wincode-website-whatsapp
-```
-
-Contoh:
-
-```text
-3-ABC123-https://domain.com-628123456789
-```
-
-## Netlify
-
-Repository dapat dihubungkan ke Netlify. Build command tidak diperlukan; publish directory adalah root repository (`.`).
-
-**Catatan:** Netlify/GitHub Pages hanya menyediakan frontend statis. Endpoint `/wheel/start/{kode}` tetap membutuhkan backend/API terpisah.
-
-## Library
-
-Winwheel dan GSAP dimuat melalui CDN pada `index.html`. Dokumentasi Winwheel menjelaskan penggunaan `Winwheel` dengan HTML5 Canvas dan animasi `spinToStop`. 
+## Deploy
+Push semua file ke GitHub branch `main`. Netlify akan mendeteksi `netlify.toml`, menginstall dependency dari `package.json`, dan deploy Functions.
